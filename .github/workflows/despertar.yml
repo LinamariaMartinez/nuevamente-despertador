@@ -1,0 +1,23 @@
+name: Despertar la demo
+
+on:
+  schedule:
+    # Cada 3 horas (hora UTC). Streamlit Cloud duerme la app tras ~12 horas sin visitas.
+    - cron: "17 */3 * * *"
+  workflow_dispatch: # para correrlo a mano desde la pestaña Actions
+
+jobs:
+  despertar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Instalar Playwright
+        run: |
+          pip install playwright==1.47.0
+          python -m playwright install --with-deps chromium
+      - name: Visitar la app
+        run: python despertar.py
